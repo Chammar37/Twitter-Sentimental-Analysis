@@ -70,6 +70,8 @@ hashtag_track = hashtags.filter(lambda h: h in track)
 # map each hashtag to be a pair of (hashtag,1)
 hashtag_counts = hashtag_track.map(lambda x: (x, 1))
 
+# hashtag_counts.pprint()
+
 # adding the count of each hashtag to its last count
 def aggregate_tags_count(new_values, total_sum):
     return sum(new_values) + (total_sum or 0)
@@ -83,7 +85,7 @@ def send_df_to_dashboard(top10):
 	# extract the counts from dataframe and convert them into array
 	tags_count = [p[1] for p in top10]
 	# initialize and send the data through REST API
-	url = 'http://localhost:5001/updateData'
+	url = 'http://dashboard:5001/updateData'
 	request_data = {'label': str(top_tags), 'data': str(tags_count)}
 	response = requests.post(url, data=request_data)
 
@@ -91,20 +93,22 @@ def send_df_to_dashboard(top10):
 def process_interval(time, rdd):
     # print a separator
     print("----------- %s -----------" % str(time))
-    try:
-        # sort counts (desc) in this time instance and take top 10
-        sorted_rdd = rdd.sortBy(lambda x:x[1], False)
-        top10 = sorted_rdd.take(5)
+    # try:
+    # sort counts (desc) in this time instance and take top 10
+    sorted_rdd = rdd.sortBy(lambda x:x[1], False)
+    top10 = sorted_rdd.take(10)
 
-        # print it nicely
-        for tag in top10:
-            print('{:<40} {}'.format(tag[0], tag[1]))
-        
-        # make connection to app.py
-        # send_df_to_dashboard(top10)
-    except:
-        e = sys.exc_info()[0]
-        print("Error: %s" % e)
+    # print it nicely
+    for tag in top10:
+        print('{:<40} {}'.format(tag[0], tag[1]))
+    
+    # make connection to app.py
+    send_df_to_dashboard(top10)
+
+    # except:
+    #     e = sys.exc_info()[0]
+    #     print("Error: %s" % e)
+
 
 # do this for every single interval
 hashtag_totals.foreachRDD(process_interval)

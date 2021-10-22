@@ -57,8 +57,22 @@ class TweetListener(StreamListener):
             full_tweet = json.loads(data)
             tweet_text = full_tweet['text']
 
+
             # print the tweet plus a separator
             print ("------------------------------------------")
+            # retweet_status = tweet_text[0] + tweet_text[1] + ' '
+            
+            # if retweet_status in tweet_text:
+            #     try:
+            #         print(tweet_text.retweeded_status.extended_tweet["full_text"])
+            #     except:
+            #         print(tweet_text.retweeded_status.text)   
+            # else:
+            #     try:
+            #         print(data.extended_tweet["full_text"])
+            #     except AttributeError:
+            #         print(data.text)       
+
             print(tweet_text + '\n')
 
             # send it to spark
@@ -68,7 +82,6 @@ class TweetListener(StreamListener):
             # handle errors
             e = sys.exc_info()[0]
             print("Error: %s" % e)
-
 
         return True
 
@@ -103,11 +116,12 @@ auth.set_access_token(access_token, access_token_secret)
 stream = Stream(auth, listener)
 
 # setup search terms
-track = ['#NBA', '#RallyTheValley', '#Nets', '#ClipperNation', '#BelieveAtlanta', '#MileHighBasketball'
-        '#Science', '#SpaceX' '#Tesla', '#DataScience', '#NASA', '#climatechange'
-        '#Footbal', '#EUROS2020', '#UEFA' '#CopaAmerica' '#ChampionsLeague', '#UEL'
-        '#News', '#Covid19', '#FreePalestine', '#coronavirus', '#consumers', '#foryou'
-        '#Music', '#HipHop', '#Rock', '#Rap', '#Punk', '#R&B'] 
+track = ['#NBA', '#RallyTheValley', '#Nets', '#ClipperNation', '#BelieveAtlanta', '#MileHighBasketball', '#Kawhi', '#Embiid', '#Young', '#Durant',
+        '#Technology', '#SpaceX' '#Tesla', '#DataScience', '#NASA', '#climatechange', '#tech', '#bitcoin', '#blockchain', '#amd',
+        '#Footbal', '#EUROS2020', '#UEFA', '#CopaAmerica', '#ChampionsLeague', '#UEL', '#Eriksen', '#Euro2021', '#UCL', '#Ronaldo',
+        '#News', '#Covid19', '#FreePalestine', '#Gaza', '#coronavirus', '#consumers', '#foryou', '#news', '#cnn', '#bbc',
+        '#Music', '#HipHop', '#Rock', '#Rap', '#Punk', '#R&B', '#Drake', '#KendrickLamar', '#Stormzy', '#ToryLanez'] 
+
 language = ['en']
 locations = [-130,-20,100,50]
 
